@@ -4,8 +4,13 @@ body {
   }
   
   .swim-lanes {
-    min-height: 60vh;
+    min-height: 200px; /* Adjust this value as needed */
   }
+
+  .card-body {
+    min-height: 400px; /* Adjust this value as needed */
+  }
+  
   
   .task-card {
     margin: 0 auto;
