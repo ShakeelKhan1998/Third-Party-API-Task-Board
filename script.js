@@ -28,7 +28,7 @@ function renderTaskList() {
         let column = $(`#${task.status}-tasks`);
         column.append(createTaskCard(task));
     }
-
+    
     $('.task').draggable({
         revert: "invalid",
         stack: ".task"
@@ -39,64 +39,83 @@ function renderTaskList() {
 function handleAddTask(event) {
     event.preventDefault();
 
-    let title = $('#task-title').val();
-    let description = $('#task-description').val();
-    let deadline = $('#task-deadline').val();
+    console.log("Adding task..."); // Check if this function is being called
 
-    if (title.trim() !== '' && description.trim() !== '' && deadline.trim() !== '') {
-        let newTask = {
-            id: generateTaskId(),
-            title: title,
-            description: description,
-            deadline: deadline,
-            status: 'not-started' // Initial status
-        };
+let title = $('#task-title').val();
+let description = $('#task-description').val();
+let deadline = $('#task-deadline').val();
+console.log(title, description, deadline);
 
-        taskList[newTask.id] = newTask;
-        saveTasks();
+//if (title.trim() != '' && description.trim() != '' && deadline.trim() != '') {
+    let newTask = {
+        id: generateTaskId(),
+        title: title,
+        description: description,
+        deadline: deadline,
+        status: 'not-started' // Initial status
+    };
 
-        $('#task-modal').css('display', 'none');
-        $('#task-form')[0].reset();
+    taskList[newTask.id] = newTask;
+    localStorage.setItem("tasks",JSON.stringify(taskList))
 
-        renderTaskList();
-    } else {
-        alert('Please fill in all fields');
+    $('#task-modal').css('display', 'none');
+    $('#task-form')[0].reset();
+
+    renderTaskList(tasks);                                        //focus on this
+// //} else {
+//     alert('Please fill in all fields');
+//     }
+}
+
+// Function to render the task list                         
+function renderTaskList() {
+    console.log("Rendering task list...");
+
+    $('.tasks').empty();
+
+    for (let taskId in taskList) {
+        let task = taskList[taskId];
+        let column = $(`#${task.status}-cards`);
+        let taskHtml = createTaskCard(task);
+        console.log("Task HTML:", taskHtml); // Log the HTML for each task
+        console.log("Inserting task into column:", column.attr('id')); // Log the container ID
+        column.append(taskHtml);
     }
+
+    $('.task').draggable({
+        revert: "invalid",
+        stack: ".task"
+    });
 }
 
-// Function to handle deleting a task
-function handleDeleteTask(event) {
-    let taskId = $(this).data('task-id');
-    delete taskList[taskId];
-    saveTasks();
-    renderTaskList();
+// Todo: create a function to handle deleting a task
+function handleDeleteTask(event){
+
 }
 
-// Function to handle dropping a task into a new status lane
+// Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    let taskId = ui.draggable.attr('id').split('-')[1];
-    let newStatus = $(this).attr('id').split('-')[0];
-    taskList[taskId].status = newStatus;
-    saveTasks();
+
 }
 
-// Function to save tasks and nextId to localStorage
-function saveTasks() {
-    localStorage.setItem('tasks', JSON.stringify(taskList));
-    localStorage.setItem('nextId', JSON.stringify(nextId));
-}
 
 // When the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
+console.log($('#task-form').length);
 $(document).ready(function () {
     renderTaskList();
+
+    $('#task-form').on('submit', function(event) {
+        handleAddTask(event);
+        });
 
     $('.tasks').droppable({
         drop: handleDrop
     });
-
+    
     $(document).on('click', '.btn-delete', handleDeleteTask);
-
+    
     $('#task-form').submit(handleAddTask);
-
+    
     $('#task-deadline').datepicker();
+    
 });

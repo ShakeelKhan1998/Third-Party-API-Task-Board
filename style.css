@@ -9,8 +9,13 @@ body {
 
   .card-body {
     min-height: 400px; /* Adjust this value as needed */
+   
   }
-  
+
+  .card-body.bg-light {
+    height: 800px; /* Adjust the height value as needed */
+}
+
   
   .task-card {
     margin: 0 auto;
