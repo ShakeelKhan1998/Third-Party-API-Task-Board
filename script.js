@@ -61,7 +61,7 @@ console.log(title, description, deadline);
     $('#task-modal').css('display', 'none');
     $('#task-form')[0].reset();
 
-    renderTaskList(tasks);                                        //focus on this
+    renderTaskList();                                        //focus on this
 // //} else {
 //     alert('Please fill in all fields');
 //     }
